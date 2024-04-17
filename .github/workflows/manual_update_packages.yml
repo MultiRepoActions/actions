@@ -1,0 +1,38 @@
+# In the event that you want to force a manual update of the Fresh packages, you can use the following workflow file to trigger the update. 
+# This workflow file will trigger the auto-update-fresh-packages-test event in the Fresh-Technology/actions repository. This event will trigger the update of the Fresh packages in the Fresh-Technology/actions repository.
+
+name: Manual Update Packages
+
+on:
+    workflow_dispatch:
+     inputs:
+        package_name:
+            description: 'Name of the package to update'
+            required: true
+            type: string
+        package_version:
+            description: 'Version of the package to update'
+            required: true
+            type: string
+        target_branch:
+            description: 'target branch to target for the update PR'
+            required: true
+            type: string # todo, change this to a dropdown list of branches that are targetable
+
+jobs:
+    dispatch-package-update:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Trigger Repo Dispatch
+              uses: peter-evans/repository-dispatch@v3
+              with:
+                    token: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
+                    repository: MultiRepoActions/actions # Replace with the repository you want to dispatch to
+                    event-type: auto-update-packages-test # Replace with the event type you want to trigger
+                    client-payload: | 
+                        {
+                            "package_name": "${{ inputs.package_name }}",
+                            "package_version": "${{ inputs.package_version }}",
+                            "target_branch": "${{ inputs.target_branch }}"
+                        }

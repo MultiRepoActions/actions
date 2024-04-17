@@ -1,0 +1,47 @@
+name: Scan for packages to update
+
+on:
+    repository_dispatch:
+        types:
+            - auto-update-packages-test
+            - auto-update-packages
+
+jobs:
+    scan-for-packages-to-update:
+        name: Scan all org repos for packages to update
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: show event payload
+              run: echo ${{ github.event.client_payload.package_name }}, ${{ github.event.client_payload.package_version }}, ${{ github.event.client_payload.target_branch }}
+
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  persist-credentials: false
+
+            - uses: actions/setup-node@v4
+              with:
+                    cache: 'pnpm'
+                    node-version: '20'
+            
+            - run: pnpm install
+            
+            - name: query api to get all repos
+              id: get_repos
+              uses: actions/github-script@v7
+              env:
+                  GITHUB_API_TOKEN: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
+              with:
+                  github-token: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
+                  script: |
+                       const script = await import('${{ github.workspace }}/scripts/getRepos.js');
+                       const repos = await script.getReposForOrg(github, 'MultiRepoActions');
+                       return repos
+
+
+            # not sure if this will work, so lets try and show the result
+
+            - name: show result of get_repos
+              run: echo ${{ steps.get_repos.outputs.result }}
