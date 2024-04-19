@@ -24,7 +24,7 @@ const reposToUpdate = validRepos.map(async (repo) => {
   const packageJson = await getPackagesJsonFromRepoContent(
     octokit,
     orgName,
-    repo
+    repo,
   );
   const dependencies = packageJson.dependencies || {};
   const devDependencies = packageJson.devDependencies || {};

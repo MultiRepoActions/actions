@@ -1,30 +1,34 @@
-
-
-
-
 export async function getReposForOrg(octokit, org) {
-  const repoData = await octokit.paginate( octokit.rest.repos.listForOrg, {
+  const repoData = await octokit.paginate(octokit.rest.repos.listForOrg, {
     org: org,
   });
-  return repoData.map(repo => repo.name);
+  return repoData.map((repo) => repo.name);
 }
 
 export async function getPackagesJsonFromRepo(octokit, owner, repo) {
   return await octokit.rest.repos.getContent({
     owner: owner,
     repo: repo,
-    path: 'package.json',
+    path: "package.json",
   });
 }
 
-export async function getPackagesJsonFromRepoContent(octokit, owner, repo, branch) {
+export async function getPackagesJsonFromRepoContent(
+  octokit,
+  owner,
+  repo,
+  branch,
+) {
   const fileApiData = await octokit.rest.repos.getContent({
     owner: owner,
     repo: repo,
-    path: 'package.json',
-    ref: branch || 'main',
+    path: "package.json",
+    ref: branch || "main",
   });
-  const fileContent = Buffer.from(fileApiData.data.content, 'base64').toString();
+  const fileContent = Buffer.from(
+    fileApiData.data.content,
+    "base64",
+  ).toString();
   return JSON.parse(fileContent);
 }
 
