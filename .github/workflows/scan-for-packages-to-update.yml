@@ -38,8 +38,8 @@ jobs:
               with:
                   github-token: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
                   script: |
-                       const script = await import('${{ github.workspace }}/scripts/getRepos.js');
-                       const repos = await script.getReposForOrg(github, 'MultiRepoActions');
+                       const script = await import('${{ github.workspace }}/src/index.js');
+                       const repos = await script(github, 'MultiRepoActions');
                        return repos
 
 
