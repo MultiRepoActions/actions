@@ -47,7 +47,11 @@ export default async function doThing(orgName) {
   console.log(reposWithDependencyList);
 }
 
-doThing();
+if (!process.env.CI) {
+  doThing("MultiRepoActions");
+}
+
+// doThing();
 
 // console.log(reposToUpdate);
 
