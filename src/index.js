@@ -12,7 +12,11 @@ octokit = new Octokit({
 });
 // }
 
-export default async function doThing(orgName) {
+export default async function getReposWithPackages(
+  orgName,
+  packageName,
+  version,
+) {
   const masterOrgName = orgName || "MultiRepoActions";
 
   const repos = await getReposForOrg(octokit, masterOrgName);
@@ -42,13 +46,26 @@ export default async function doThing(orgName) {
 
   const reposWithDependencyList = await Promise.all(repoList);
 
+  // look for the package name in the dependencies or devDependencies of each repo, return the repo name if found
+  const reposToUpdate = reposWithDependencyList.filter((repo) => {
+    const { dependencies, devDependencies } = repo;
+    const packageVersion =
+      dependencies[packageName] || devDependencies[packageName];
+    return packageVersion && packageVersion !== version;
+  });
+
   // console.log(reposToUpdate);
 
-  console.log(reposWithDependencyList);
+  console.log(reposToUpdate);
 }
 
+// used when running locally
 if (!process.env.CI) {
-  doThing("MultiRepoActions");
+  getReposWithPackages(
+    "MultiRepoActions",
+    "@multi-repo-actions/demo-package-a",
+    "1.0.1",
+  );
 }
 
 // doThing();
