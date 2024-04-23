@@ -13,18 +13,22 @@ if (!process.env.CI) {
 }
 
 export default async function doThing(octokit, orgName) {
-  const orgName = orgName || "MultiRepoActions";
+  const masterOrgName = orgName || "MultiRepoActions";
 
-  const repos = await getReposForOrg(octokit, orgName);
+  const repos = await getReposForOrg(octokit, masterOrgName);
 
-  const validRepos = await getReposWithPackageJson(octokit, orgName, repos);
+  const validRepos = await getReposWithPackageJson(
+    octokit,
+    masterOrgName,
+    repos,
+  );
 
   // update repos where the package.json has either dependencies or devDependencies that match the name of the provided package.
 
   const repoList = await validRepos.map(async (repo) => {
     const packageJson = await getPackagesJsonFromRepoContent(
       octokit,
-      orgName,
+      masterOrgName,
       repo,
     );
     const dependencies = packageJson.dependencies || {};
