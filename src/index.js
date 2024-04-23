@@ -12,8 +12,8 @@ if (!process.env.CI) {
   });
 }
 
-export default async function doThing() {
-  const orgName = "MultiRepoActions";
+export default async function doThing(octokit, orgName) {
+  const orgName = orgName || "MultiRepoActions";
 
   const repos = await getReposForOrg(octokit, orgName);
 
