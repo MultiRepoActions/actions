@@ -12,32 +12,36 @@ if (!process.env.CI) {
   });
 }
 
-const orgName = "MultiRepoActions";
+export default async function doThing() {
+  const orgName = "MultiRepoActions";
 
-const repos = await getReposForOrg(octokit, orgName);
+  const repos = await getReposForOrg(octokit, orgName);
 
-const validRepos = await getReposWithPackageJson(octokit, orgName, repos);
+  const validRepos = await getReposWithPackageJson(octokit, orgName, repos);
 
-// update repos where the package.json has either dependencies or devDependencies that match the name of the provided package.
+  // update repos where the package.json has either dependencies or devDependencies that match the name of the provided package.
 
-const reposToUpdate = validRepos.map(async (repo) => {
-  const packageJson = await getPackagesJsonFromRepoContent(
-    octokit,
-    orgName,
-    repo,
-  );
-  const dependencies = packageJson.dependencies || {};
-  const devDependencies = packageJson.devDependencies || {};
-  return {
-    repo,
-    dependencies,
-    devDependencies,
-  };
-});
+  const reposToUpdate = validRepos.map(async (repo) => {
+    const packageJson = await getPackagesJsonFromRepoContent(
+      octokit,
+      orgName,
+      repo,
+    );
+    const dependencies = packageJson.dependencies || {};
+    const devDependencies = packageJson.devDependencies || {};
+    return {
+      repo,
+      dependencies,
+      devDependencies,
+    };
+  });
 
-await Promise.all(reposToUpdate).then((repos) => {
-  console.log(repos);
-});
+  await Promise.all(reposToUpdate).then((repos) => {
+    console.log(repos);
+  });
+}
+
+doThing();
 
 // console.log(reposToUpdate);
 
