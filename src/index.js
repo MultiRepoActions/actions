@@ -21,7 +21,7 @@ export default async function doThing() {
 
   // update repos where the package.json has either dependencies or devDependencies that match the name of the provided package.
 
-  const reposToUpdate = validRepos.map(async (repo) => {
+  const repoList = await validRepos.map(async (repo) => {
     const packageJson = await getPackagesJsonFromRepoContent(
       octokit,
       orgName,
@@ -36,9 +36,11 @@ export default async function doThing() {
     };
   });
 
-  await Promise.all(reposToUpdate).then((repos) => {
-    console.log(repos);
-  });
+  const reposWithDependencyList = await Promise.all(repoList);
+
+  // console.log(reposToUpdate);
+
+  console.log(reposWithDependencyList);
 }
 
 doThing();
