@@ -6,13 +6,13 @@ import {
 } from "./getRepos.js";
 
 let octokit;
-if (!process.env.CI) {
-  octokit = new Octokit({
-    auth: process.env.GITHUB_API_TOKEN,
-  });
-}
+// if (!process.env.CI) {
+octokit = new Octokit({
+  auth: process.env.GITHUB_API_TOKEN,
+});
+// }
 
-export default async function doThing(octokit, orgName) {
+export default async function doThing(orgName) {
   const masterOrgName = orgName || "MultiRepoActions";
 
   const repos = await getReposForOrg(octokit, masterOrgName);
