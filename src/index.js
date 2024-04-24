@@ -57,6 +57,8 @@ export default async function getReposWithPackages(
   // console.log(reposToUpdate);
 
   console.log(reposToUpdate);
+
+  return JSON.stringify(reposToUpdate);
 }
 
 // used when running locally
