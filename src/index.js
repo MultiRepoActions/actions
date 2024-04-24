@@ -68,6 +68,7 @@ export default async function getReposWithPackages(
     include: reposMatrix,
   };
 
+  console.log(JSON.stringify(obj));
   return JSON.stringify(obj);
 }
 
