@@ -55,6 +55,9 @@ jobs:
     name: test-output
     runs-on: ubuntu-latest
     needs: scan-for-packages-to-update
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.scan-for-packages-to-update.outputs.result) }}
     steps:
-      - name: show result of get_repos and output as an action output
-        run: echo "result=${{ needs.scan-for-packages-to-update.outputs.result }}" >> $GITHUB_OUTPUT
+      - name: show result for each repo
+        run: echo "result=${{ matrix.repo }}"

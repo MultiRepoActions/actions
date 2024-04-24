@@ -33,12 +33,12 @@ export default async function getReposWithPackages(
     const packageJson = await getPackagesJsonFromRepoContent(
       octokit,
       masterOrgName,
-      repo,
+      repo.name,
     );
     const dependencies = packageJson.dependencies || {};
     const devDependencies = packageJson.devDependencies || {};
     return {
-      repo,
+      repo: repo.full_name,
       dependencies,
       devDependencies,
     };
@@ -56,9 +56,15 @@ export default async function getReposWithPackages(
 
   // console.log(reposToUpdate);
 
-  console.log(reposToUpdate);
+  // console.log(reposToUpdate);
 
-  return JSON.stringify(reposToUpdate);
+  const reposMatrix = reposToUpdate.map((repo) => {
+    return repo.repo;
+  });
+
+  console.log(reposMatrix);
+
+  return JSON.stringify(reposMatrix);
 }
 
 // used when running locally
