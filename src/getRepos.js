@@ -13,18 +13,30 @@ export async function getPackagesJsonFromRepo(octokit, owner, repo) {
   });
 }
 
+/**
+ *
+ *
+ * @export
+ * @param {*} octokit - octokit instance
+ * @param {string} owner - owner org of the repo
+ * @param {string} repo - repo/package name
+ * @param {string} branch - target branch to get the package.json file from
+ * @return {*}
+ */
 export async function getPackagesJsonFromRepoContent(
   octokit,
   owner,
   repo,
-  branch,
+  branch = "main",
 ) {
   const fileApiData = await octokit.rest.repos.getContent({
     owner: owner,
     repo: repo,
     path: "package.json",
-    ref: branch || "main",
+    ref: branch,
   });
+
+  // decode the base64 encoded content
   const fileContent = Buffer.from(
     fileApiData.data.content,
     "base64",
