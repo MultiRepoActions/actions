@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       package_name:
-        description: "Name of the package to update"
+        description: "Name of the package to update - include npm org name prefix (e.g. @multi-repo-actions/demo-package-a)"
         required: true
         type: string
       package_version:
-        description: "Version of the package to update"
+        description: "Version of the package to update (e.g. 1.0.0)"
         required: true
         type: string
       target_branch:
