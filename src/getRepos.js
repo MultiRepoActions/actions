@@ -39,7 +39,7 @@ export const getReposWithPackageJson = async (octokit, org, repos) => {
       await getPackagesJsonFromRepo(octokit, org, repo);
       reposWithPackageJson.push(repo);
     } catch (error) {
-      console.log(`No package.json found in ${repo}`);
+      console.log(`No package.json found in root of ${repo}... skipping.`);
     }
   }
   return reposWithPackageJson;
