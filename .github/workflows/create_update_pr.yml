@@ -1,0 +1,16 @@
+# name: Create update PR
+
+# on:
+#   repository_dispatch:
+#     types:
+#       - auto-update-packages-test
+#       - auto-update-packages
+
+# jobs:
+#   create-update-pr:
+#     name: Scan all org repos for packages to update
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: show event payload
+#         run: echo ${{ github.event.client_payload.package_name }}, ${{ github.event.client_payload.package_version }}, ${{ github.event.client_payload.target_branch }}
