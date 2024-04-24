@@ -64,7 +64,11 @@ export default async function getReposWithPackages(
 
   console.log(reposMatrix);
 
-  return JSON.stringify(reposMatrix);
+  const obj = {
+    include: reposMatrix,
+  };
+
+  return JSON.stringify(obj);
 }
 
 // used when running locally
