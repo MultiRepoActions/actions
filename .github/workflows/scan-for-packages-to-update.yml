@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      matrix: ${{ steps.get_repos.outputs.result }}
+      matrix: ${{ steps.show_result.outputs.matrix }}
 
     steps:
       - name: show event payload
@@ -49,7 +49,7 @@ jobs:
 
       - name: show result of get_repos and output as an action output
         id: show_result
-        run: echo "result=matrix::${{ steps.get_repos.outputs.result }}}" >> $GITHUB_OUTPUT
+        run: echo "matrix=${{ steps.get_repos.outputs.result }}}" >> $GITHUB_OUTPUT
 
   test-output:
     name: test-output

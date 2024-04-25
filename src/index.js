@@ -59,13 +59,13 @@ export default async function getReposWithPackages(
   // console.log(reposToUpdate);
 
   const reposMatrix = reposToUpdate.map((repo) => {
-    return { repo: repo.repo };
+    return repo.repo;
   });
 
   console.log(reposMatrix);
 
   const obj = {
-    include: reposMatrix,
+    repo: reposMatrix,
   };
 
   console.log(JSON.stringify(obj));
