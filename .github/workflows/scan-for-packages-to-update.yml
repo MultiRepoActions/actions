@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      result: ${{ steps.get_repos.outputs.result }}
+      matrix: ${{ steps.get_repos.outputs.result }}
 
     steps:
       - name: show event payload
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: scan-for-packages-to-update
     strategy: 
-      matrix: ${{ needs.scan-for-packages-to-update.outputs.result }}
+      matrix: ${{ fromJson(needs.scan-for-packages-to-update.outputs.matrix) }}
     steps:
       - name: show result for each repo
         run: echo "result=${{ matrix.repo }}"
