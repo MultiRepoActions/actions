@@ -10,41 +10,11 @@ on:
             #     target_branch: ${{ github.event.client_payload.target_branch }}
 
 jobs:
-    build:
+    pre:
         runs-on: ubuntu-latest
 
         steps:
 
             - name: show event payload
               run: echo ${{ github.event.client_payload.package_name }}, ${{ github.event.client_payload.package_version }}, ${{ github.event.client_payload.target_branch }}
-              
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                fetch-depth: 0
-                persist-credentials: false
-
-            - uses: pnpm/action-setup@v3
-
-            - uses: actions/setup-node@v4
-              with:
-                cache: "pnpm"
-                node-version: "20"
-
-            - run: pnpm install
-
-            - name: run update packages script
-              id: update_packages
-              uses: MultiRepoActions/actions/.github/workflows/update_packages.yml@main
-              with: 
-                package_name: ${{ github.event.client_payload.package_name }}
-                package_version: ${{ github.event.client_payload.package_version }}
-                target_branch: ${{ github.event.client_payload.target_branch }}
-
-              # secrets:
-              #   ACCESS_TOKEN_FOR_PR_AUTOMATION: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
-                
-            # not sure if this will work, so lets try and show the result
-
-            - name: show result of get_repos
-              run: echo ${{ steps.get_repos.outputs.result }}
+           
