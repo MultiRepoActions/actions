@@ -55,7 +55,11 @@ jobs:
     name: test-output
     runs-on: ubuntu-latest
     needs: scan-for-packages-to-update
-    strategy: ${{ fromJSON(needs.scan-for-packages-to-update.outputs.result) }}
+    # strategy: 
+      # matrix: ${{ fromJSON(needs.scan-for-packages-to-update.outputs.result) }}
     steps:
+      # - name: show result for each repo
+      #   run: echo "result=${{ matrix.repo }}"
+
       - name: show result for each repo
-        run: echo "result=${{ matrix.repo }}"
+        run: echo "result=${{ fromJson(needs.scan-for-packages-to-update.outputs.result) }}"
