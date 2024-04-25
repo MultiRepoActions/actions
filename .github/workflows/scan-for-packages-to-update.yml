@@ -51,15 +51,28 @@ jobs:
         id: show_result
         run: echo "matrix=${{ steps.get_repos.outputs.result }}}" >> $GITHUB_OUTPUT
 
-  test-output:
-    name: test-output
+  emit-update-packages:
+    name: emit update package events
     runs-on: ubuntu-latest
     needs: scan-for-packages-to-update
-    strategy: 
+    strategy:
       matrix: ${{ fromJson(needs.scan-for-packages-to-update.outputs.matrix) }}
     steps:
       - name: show result for each repo
         run: echo "result=${{ matrix.repo }}"
+
+      - name: Trigger Repo Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
+          repository: ${{matrix.repo}} # Replace with the repository you want to dispatch to
+          event-type: update-internal-packages # Replace with the event type you want to trigger
+          client-payload: |
+            {
+                "package_name": "some-package-name",
+                "package_version": "foo",
+                "target_branch": "main"
+            }
 
       # - name: show result for each repo
       #   run: echo "result=${{ fromJson(needs.scan-for-packages-to-update.outputs.result) }}"
