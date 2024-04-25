@@ -17,4 +17,21 @@ jobs:
 
             - name: show event payload
               run: echo ${{ github.event.client_payload.package_name }}, ${{ github.event.client_payload.package_version }}, ${{ github.event.client_payload.target_branch }}
-           
+    build:
+        needs: pre
+        runs-on: ubuntu-latest
+        steps:
+
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - uses: pnpm/action-setup@v3
+
+            - uses: actions/setup-node@v4
+              with:
+                  cache: "pnpm"
+                  node-version: "20"
+
+            - run: pnpm install
+
+            
