@@ -41,6 +41,8 @@ jobs:
 
             - run: pnpm install ${{ github.event.client_payload.package_name }}@${{ github.event.client_payload.package_version }}
 
+            - run: pnpm install # updates the lockfile
+
             # create pull request against target branch
 
             - name: create pull request
