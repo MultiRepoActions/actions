@@ -34,4 +34,18 @@ jobs:
 
             - run: pnpm install
 
+            - run: pnpm install ${{ github.event.client_payload.package_name }} ${{ github.event.client_payload.package_version }}
+
+            # create pull request against target branch
+
+            - name: create pull request
+              uses: peter-evans/create-pull-request@v6
+              with:
+                  token: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
+                  commit-message: "chore: update ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
+                  title: "chore: update ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
+                  body: "This PR updates ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
+                  branch: "update-${{ github.event.client_payload.package_name }}-${{ github.event.client_payload.package_version }}"
+                  base: ${{ github.event.client_payload.target_branch }}
+                  labels: "automated-pr"
             
