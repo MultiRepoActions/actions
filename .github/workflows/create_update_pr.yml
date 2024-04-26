@@ -43,8 +43,6 @@ jobs:
 
             # create pull request against target branch
 
-            - run: echo "${{secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION}}
-
             - name: create pull request
               uses: peter-evans/create-pull-request@v6
               with:
