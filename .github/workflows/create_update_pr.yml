@@ -1,58 +1,47 @@
 name: Update Packages
 
 on:
-    workflow_call:
-        # inputs:
-            # client_payload:
-            #     package_name: ${{ github.event.client_payload.package_name }}
-            #         type: string
-            #     package_version: ${{ github.event.client_payload.package_version }}
-            #     target_branch: ${{ github.event.client_payload.target_branch }}
+  workflow_call:
+    # inputs:
+    # client_payload:
+    #     package_name: ${{ github.event.client_payload.package_name }}
+    #         type: string
+    #     package_version: ${{ github.event.client_payload.package_version }}
+    #     target_branch: ${{ github.event.client_payload.target_branch }}
 
-
-            secrets:
-                ACCESS_TOKEN_FOR_PR_AUTOMATION:
-                    description: "Access token for PR automation"
-                    required: true
+    secrets:
+      ACCESS_TOKEN_FOR_PR_AUTOMATION:
+        description: "Access token for PR automation"
+        required: true
 jobs:
-    pre:
-        runs-on: ubuntu-latest
+  pre:
+    runs-on: ubuntu-latest
 
-        steps:
+    steps:
+      - name: show event payload
+        run: echo ${{ github.event.client_payload.package_name }}, ${{ github.event.client_payload.package_version }}, ${{ github.event.client_payload.target_branch }}
+  build:
+    needs: pre
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: show event payload
-              run: echo ${{ github.event.client_payload.package_name }}, ${{ github.event.client_payload.package_version }}, ${{ github.event.client_payload.target_branch }}
-    build:
-        needs: pre
-        runs-on: ubuntu-latest
-        steps:
+      - uses: MultiRepoActions/actions/.github/workflows/setup_node.yml@main
 
-            - name: Checkout repository
-              uses: actions/checkout@v4
+      - run: pnpm install ${{ github.event.client_payload.package_name }}@${{ github.event.client_payload.package_version }}
 
-            - uses: pnpm/action-setup@v3
+      - run: pnpm install # updates the lockfile
 
-            - uses: actions/setup-node@v4
-              with:
-                  cache: "pnpm"
-                  node-version: "20"
+      # create pull request against target branch
 
-            - run: pnpm install
-
-            - run: pnpm install ${{ github.event.client_payload.package_name }}@${{ github.event.client_payload.package_version }}
-
-            - run: pnpm install # updates the lockfile
-
-            # create pull request against target branch
-
-            - name: create pull request
-              uses: peter-evans/create-pull-request@v6
-              with:
-                  token: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
-                  commit-message: "chore: update ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
-                  title: "chore: update ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
-                  body: "This PR updates ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
-                  branch: "update-${{github.event.client_payload.target_branch}}-to-${{ github.event.client_payload.package_name }}-${{ github.event.client_payload.package_version }}"
-                  base: ${{ github.event.client_payload.target_branch }}
-                  labels: "automated-pr"
-            
+      - name: create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.ACCESS_TOKEN_FOR_PR_AUTOMATION }}
+          commit-message: "chore: update ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
+          title: "chore: update ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
+          body: "This PR updates ${{ github.event.client_payload.package_name }} to ${{ github.event.client_payload.package_version }}"
+          branch: "update-${{github.event.client_payload.target_branch}}-to-${{ github.event.client_payload.package_name }}-${{ github.event.client_payload.package_version }}"
+          base: ${{ github.event.client_payload.target_branch }}
+          labels: "automated-pr"
