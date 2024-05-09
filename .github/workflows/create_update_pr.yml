@@ -27,7 +27,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - uses: MultiRepoActions/actions/.github/workflows/setup_node.yml@main
+      - uses: MultiRepoActions/actions/.github/actions/setup_node.yml@main
 
       - run: pnpm install ${{ github.event.client_payload.package_name }}@${{ github.event.client_payload.package_version }}
 

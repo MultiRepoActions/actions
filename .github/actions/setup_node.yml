@@ -1,0 +1,14 @@
+name: Setup Node
+description: "Setup Node and pnpm for the workflow"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: pnpm/action-setup@v3
+
+    - uses: actions/setup-node@v4
+      with:
+        cache: "pnpm"
+        node-version: "20"
+
+    - run: pnpm install
