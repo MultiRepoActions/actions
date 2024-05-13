@@ -24,14 +24,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: pnpm/action-setup@v3
-
-      - uses: actions/setup-node@v4
-        with:
-          cache: "pnpm"
-          node-version: "20"
-
-      - run: pnpm install
+      - uses: MultiRepoActions/actions/.github/actions/setup_node@main
 
       - name: query api to get all repos
         id: get_repos
